@@ -79,19 +79,30 @@ The `SwapRouter` contract does not define any events.
 
 #### Functions
 
-The SwapRouter contains nine functions:
-1. **Constructor**: Initializes the contract with the Uniswap V3 factory and WETH9 address.
-2. **getPool**: A private function to retrieve the Uniswap V3 pool for a given token pair and fee.
-3. **uniswapV3SwapCallback**: A callback function invoked by Uniswap V3 pool swaps.
-4. **exactInputInternal**: Performs a single exact input swap.
-5. **exactInputSingle**: Executes a single exact input swap with given parameters.
-6. **exactInput**: Executes a series of exact input swaps with given parameters.
-7. **exactOutputInternal**: Performs a single exact output swap.
-8. **exactOutputSingle**: Executes a single exact output swap with given parameters.
-9. **exactOutput**: Executes a series of exact output swaps with given parameters.
+The SwapRouter includes nine functions:
 
-### Security
+1. **Constructor**: Initializes the contract with the Uniswap V3 factory and WETH9 address directly obtained from the `PeripheryImmutableState` contract.
+
+2. **getPool**: This private function retrieves the Uniswap V3 pool for a given token pair and fee. It reads from the `PoolAddress` contract to obtain the pool key for the specified token pair.
+
+3. **uniswapV3SwapCallback**: A callback function invoked by Uniswap V3 pool swaps.
+
+4. **exactInputInternal**: Takes as input the amount to be swapped in, the recipient address, the square root price limit, and swap callback data. It executes the swap and returns the amount of output tokens received.
+
+5. **exactInputSingle**: Executes a single exact input swap with parameters such as the amount in, recipient address, square root price limit, and minimum output amount. It ensures that the output amount received is greater than or equal to the specified minimum output amount.
+
+6. **exactInput**: This function iterates through the swap path, executing each swap and updating the input amount for the next swap until the final output amount is achieved.
+
+7. **exactOutputInternal**: A private function that performs a single exact output swap operation. It takes as input the amount of output tokens desired, the recipient address, the square root price limit, and swap callback data. It runs the swap and returns the amount of input tokens required to achieve the desired output.
+
+8. **exactOutputSingle**: Executes a single exact output swap with given parameters. It ensures that the input amount provided does not exceed the specified maximum input amount.
+
+9. **exactOutput**: Executes a series of exact output swaps. The function iterates through the swap path, executing each swap and updating the output amount for the next swap until the final input amount is achieved.
+
+## Recommendations
+
+Adding event logging to the SwapRouter contract would enhance transparency and enable better monitoring of contract interactions. Events serve as valuable tools for debugging, auditing, and analyzing contract behavior.
 
 ## Conclusion
 
-
+The SwapRouter contract plays a crucial role in enabling seamless and efficient token swapping. Its architecture, comprising inheritance, abstract contracts, events, libraries, and external dependencies, ensures robust functionality and interoperability. Understanding the intricacies of the SwapRouter contract is essential for developers and users alike to utilize its capabilities effectively within the decentralized finance ecosystem.
